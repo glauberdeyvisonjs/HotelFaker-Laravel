@@ -13,7 +13,7 @@ Recomendamos o uso de um software como o Postman (https://www.postman.com/) ou o
 ## Documentação
 
 ### URL Base:
-#### `https://hotel-faker-api.squareweb.app/api`
+`https://hotel-faker-api.squareweb.app/api`
 
 ### Rotas:
 1. **Authentication Routes**
