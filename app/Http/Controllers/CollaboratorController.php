@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Services\CollaboratorsService;
+use App\Classes\Services\CollaboratorService;
 use App\Classes\Support\HelperReturn;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CollaboratorsController extends Controller
+class CollaboratorController extends Controller
 {
-    protected CollaboratorsService $collaboratorsService;
+    protected CollaboratorService $collaboratorService;
 
     /**
-     * Constructor of CollaboratorsService
+     * Constructor of CollaboratorService
      *
      * @return void
      */
-    public function __construct(CollaboratorsService $collaboratorsService)
+    public function __construct(CollaboratorService $collaboratorService)
     {
-        $this->collaboratorsService = $collaboratorsService;
+        $this->collaboratorService = $collaboratorService;
     }
 
     /**
@@ -30,7 +30,7 @@ class CollaboratorsController extends Controller
     public function list(): JsonResponse
     {
         try {
-            return HelperReturn::returnSuccess('collaborators', $this->collaboratorsService->list());
+            return HelperReturn::returnSuccess('collaborators', $this->collaboratorService->list());
         } catch (Exception $e) {
             return HelperReturn::returnException($e);
         }
@@ -45,7 +45,7 @@ class CollaboratorsController extends Controller
     public function store(Request $request): JsonResponse
     {
         try {
-            return HelperReturn::returnSuccess('collaborator', $this->collaboratorsService->store($request), 'Colaborador cadastrado com sucesso!');
+            return HelperReturn::returnSuccess('collaborator', $this->collaboratorService->store($request), 'Colaborador cadastrado com sucesso!');
         } catch (Exception $th) {
             return HelperReturn::returnException($th);
         }
@@ -60,12 +60,9 @@ class CollaboratorsController extends Controller
     public function show(int $id): JsonResponse
     {
         try {
-            return response()->json($this->collaboratorsService->show($id));
+            return HelperReturn::returnSuccess('collaborator', $this->collaboratorService->show($id));
         } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 400);
+            return HelperReturn::returnException($e);
         }
     }
 
@@ -78,7 +75,7 @@ class CollaboratorsController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        //
+        // TODO: Implement update() method.
     }
 
     /**
@@ -90,17 +87,11 @@ class CollaboratorsController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            $this->collaboratorsService->destroy($id);
+            $this->collaboratorService->destroy($id);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'O colaborador foi deletado com sucesso!',
-            ]);
-        } catch (Exception) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Ocorreu um erro ao deletar o colaborador!',
-            ], 400);
+            return HelperReturn::returnSuccess('collaborator', null, 'Colaborador deletado com sucesso!');
+        } catch (Exception $e) {
+            return HelperReturn::returnException($e);
         }
     }
 }

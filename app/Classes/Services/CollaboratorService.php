@@ -2,23 +2,24 @@
 
 namespace App\Classes\Services;
 
-use App\Models\Collaborators;
+use App\Models\Collaborator;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class CollaboratorsService
+class CollaboratorService
 {
     /**
      * @return Collection|array
      */
     public function list(): Collection|array
     {
-        return Collaborators::query()->whereNull('deleted_at')->get();
+        return Collaborator::query()->whereNull('deleted_at')->get();
     }
 
     /**
@@ -75,30 +76,28 @@ class CollaboratorsService
 
     /**
      * @param $data
-     * @return JsonResponse
+     * @return Model
      * @throws Exception
      */
-    public function store($data): JsonResponse
+    public function store($data): Model
     {
-        $increment = $this->getIncrement();
+        $increment = $this::getIncrement();
         $user = $this->getUser($data);
 
         if (isset($user)) {
             try {
-                return Collaborators::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'cpf' => $user->cpf,
-                    'cod_user' => $user->id,
-                    'registration' => $increment,
-                    'password' => Hash::make($data->password),
-                    'flag_permissions' => $data->flag_permissions ?? '0',
-                ]);
+                return Collaborator::query()
+                    ->create([
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'cpf' => $user->cpf,
+                        'cod_user' => $user->id,
+                        'registration' => $increment,
+                        'password' => Hash::make($data->password),
+                        'flag_permissions' => $data->flag_permissions ?? '0',
+                    ]);
             } catch (Exception $e) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $e->getMessage(),
-                ], 400);
+                throw new Exception('Não foi possível cadastrar o colaborador!', 500);
             }
         } else {
             throw new Exception('Não foi possível encontrar o usuário!', 404);
@@ -107,28 +106,33 @@ class CollaboratorsService
 
     /**
      * @param $id
-     * @return JsonResponse
+     * @return array
+     * @throws Exception
      */
-    public function show($id): JsonResponse
+    public function show($id): array
     {
-        $collaborator = Collaborators::query()->where('id', $id)->first();
+        $collaborator = Collaborator::query()->where('id', $id)->first();
 
         if (!isset($collaborator)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Este usuário nunca foi vinculado!',
-            ], 404);
+            throw new Exception('Não foi possível encontrar o colaborador!', 404);
         } else {
             if (isset($collaborator->deleted_at)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Este usuário foi desvinculado em ' . Carbon::createFromFormat('Y-m-d H:i:s', $collaborator->deleted_at)->format('d/m/Y') . '!',
-                ], 404);
+                throw new Exception('Este usuário foi desvinculado em ' . Carbon::createFromFormat('Y-m-d H:i:s', $collaborator->deleted_at)->format('d/m/Y') . '!', 404);
             } else {
-                return response()->json([
-                    'status' => 'success',
-                    'collaborator' => $collaborator,
-                ]);
+                $permissao = match ($collaborator->flag_permissions) {
+                    1 => 'Administrador',
+                    2 => 'SuperUser',
+                    default => 'Colaborador',
+                };
+
+                return [
+                    'id' => $collaborator->id,
+                    'name' => $collaborator->name,
+                    'email' => $collaborator->email,
+                    'cpf' => $collaborator->cpf,
+                    'registration' => $collaborator->registration,
+                    'flag_permissions' => $permissao,
+                ];
             }
         }
     }
@@ -139,7 +143,7 @@ class CollaboratorsService
      */
     public function destroy($id): void
     {
-        Collaborators::query()->where('id', $id)->update([
+        Collaborator::query()->where('id', $id)->update([
             'deleted_at' => Carbon::now(),
         ]);
     }

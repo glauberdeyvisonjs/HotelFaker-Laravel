@@ -8,9 +8,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * @method static create(array $array)
+ * Collaborator model
+ * @package App\Models
  */
-class Collaborators extends Model
+class Collaborator extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 

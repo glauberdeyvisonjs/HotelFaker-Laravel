@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CollaboratorsController;
+use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -30,9 +30,9 @@ Route::middleware('auth.api')->name('app.')->group(function () {
     });
 
     Route::prefix('collaborators')->name('collaborators.')->group(function () {
-        Route::get('/list', [CollaboratorsController::class, 'list'])->name('list');
-        Route::post('/store', [CollaboratorsController::class, 'store'])->name('store');
-        Route::get('/show/{id}', [CollaboratorsController::class, 'show'])->name('show');
-        Route::post('/delete/{id}', [CollaboratorsController::class, 'destroy'])->name('delete');
+        Route::get('/list', [CollaboratorController::class, 'list'])->name('list');
+        Route::post('/store', [CollaboratorController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [CollaboratorController::class, 'show'])->name('show');
+        Route::post('/delete/{id}', [CollaboratorController::class, 'destroy'])->name('delete');
     });
 });
