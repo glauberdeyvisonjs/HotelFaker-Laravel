@@ -2,10 +2,6 @@
 
 namespace App\Classes\Support;
 
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-
 class HelperQueries
 {
     /**

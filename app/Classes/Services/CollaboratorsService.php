@@ -50,18 +50,18 @@ class CollaboratorsService
      */
     public function getUser($data): mixed
     {
-        $checkUser = User::where('email', $data->email)->first();
+        $checkUser = User::query()->where('email', $data->email)->first();
 
         if (isset($checkUser)) {
-            User::where('id', $checkUser->id)
+            User::query()->where('id', $checkUser->id)
                 ->update([
                     'flag_collaborator' => '1',
                     'deleted_at' => null,
                 ]);
 
-            $user = User::where('id', $checkUser->id)->first();
+            $user = User::query()->where('id', $checkUser->id)->first();
         } else {
-            $user = User::create([
+            $user = User::query()->create([
                 'name' => $data->name,
                 'email' => $data->email,
                 'cpf' => $data->cpf,

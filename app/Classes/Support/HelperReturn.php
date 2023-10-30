@@ -59,7 +59,11 @@ class HelperReturn
             default => 500,
         };
 
-        return response()->json(['message' => $exception->getMessage()], $code);
+        return response()->json([
+            'status' => 'error',
+            'message' => $exception->getMessage(),
+            'exception' => $exception->getTraceAsString(),
+        ], $code);
     }
 
     /**

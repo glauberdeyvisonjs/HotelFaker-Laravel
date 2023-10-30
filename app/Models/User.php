@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,13 +9,25 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
- * @method static where(string $string, $id)
- * @method static select(string $string, string $string1, string $string2, string $string3, string $string4)
- * @method static create(array $array)
+ * Model for users table.
+ * @class User
+ * @package App\Models
  */
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The table associated with the model.
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
+     * The primary key associated with the table.
+     * @var string
+     */
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -25,9 +36,12 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
-        'cpf',
         'email',
+        'cpf',
+        'email_verified_at',
         'password',
+        'flag_collaborator',
+        'deleted_at',
     ];
 
     /**
@@ -37,7 +51,6 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**

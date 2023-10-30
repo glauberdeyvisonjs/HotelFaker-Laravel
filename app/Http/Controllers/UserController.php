@@ -67,7 +67,7 @@ class UserController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         try {
-            $this->userService->update($request->all(), $id);
+            $this->userService->update($request, $id);
 
             return HelperReturn::returnSuccess('user', $this->userService->show($id), 'Usuário atualizado com sucesso!');
         } catch (ModelNotFoundException|NotFoundHttpException|MethodNotAllowedHttpException|HttpException|Exception $e) {

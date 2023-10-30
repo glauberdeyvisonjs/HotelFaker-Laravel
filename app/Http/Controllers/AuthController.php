@@ -74,8 +74,8 @@ class AuthController extends Controller
                 'cpf' => 'required|string|min:11|max:11',
             ]);
 
-            $existeEmail = User::where('email', $request->email)->first();
-            $existeCpf = User::where('cpf', $request->cpf)->first();
+            $existeEmail = User::query()->where('email', $request->email)->first();
+            $existeCpf = User::query()->where('cpf', $request->cpf)->first();
 
             if (isset($existeEmail) && !isset($existeEmail->deleted_at)) {
                 throw new Exception('O email já está cadastrado.', 409);
@@ -95,7 +95,7 @@ class AuthController extends Controller
 
                     $user = $existeCpf;
                 } else {
-                    User::create([
+                    User::query()->create([
                         'name' => trim($request->name),
                         'email' => trim($request->email),
                         'password' => Hash::make(trim($request->password)),
@@ -104,7 +104,7 @@ class AuthController extends Controller
 
                     $userReactivated = false;
 
-                    $user = User::where('email', trim($request->email))->first();
+                    $user = User::query()->where('email', trim($request->email))->first();
                 }
             }
         } catch (Exception $e) {
