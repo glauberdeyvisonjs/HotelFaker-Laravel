@@ -16,7 +16,7 @@ Recomendamos o uso de um software como o Postman (https://www.postman.com/) ou o
 `https://hotel-faker-api.squareweb.app/api`
 
 ### Rotas:
-1. **Rotas de Autenticaçao**
+1. **Rotas de Autenticação**
     - `POST /login`: Esta rota é usada para fazer logout de um usuário. Ela usa o método `logout` do `AuthController`.
     - `POST /logout`: Esta rota é usada para fazer logout de um usuário. Ela usa o método `logout` do `AuthController`.
     - `POST /refresh`: Esta rota é usada para atualizar a sessão de um usuário. Ela usa o método `refresh` do `AuthController`.
