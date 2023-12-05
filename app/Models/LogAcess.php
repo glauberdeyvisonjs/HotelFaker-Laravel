@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class LogAcess extends Model
 {
     use HasFactory;
-    protected $fillable = ['ip', 'route'];
+    protected $fillable = ['ip', 'route', 'user_id'];
 }
