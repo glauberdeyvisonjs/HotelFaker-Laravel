@@ -4,7 +4,6 @@ namespace App\Http;
 
 use App\Http\Middleware\apiProtectedRoute;
 use App\Http\Middleware\Authenticate;
-use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\LogAccessMiddleware;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
@@ -90,7 +89,6 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
-        'log.auth' => AuthMiddleware::class,
         'auth.api' => apiProtectedRoute::class,
     ];
 }
