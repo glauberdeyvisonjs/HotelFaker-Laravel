@@ -24,16 +24,17 @@ class LogAccessMiddleware
     {
         $ip = $request->server->get('REMOTE_ADDR');
         $rota = $request->getRequestUri();
-        $authorizedRoutes = ['/api/login', '/api/register', '/api/logout', '/api/refresh'];
 
         $data = [
             'ip' => $ip,
             'route' => $rota,
         ];
 
-        if (!in_array($rota, $authorizedRoutes)) {
+        try {
             $user = JWTAuth::parseToken()->authenticate();
             $data['user_id'] = $user->id;
+        } catch (Exception $e) {
+            // do nothing
         }
 
         LogAcess::query()->create($data);
